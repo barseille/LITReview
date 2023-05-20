@@ -23,16 +23,18 @@ class Ticket(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.resize_image()
-        
+ 
+ 
+# models.py       
 class UserFollows(models.Model):
     # utilisateur qui suit un autre utilisateur
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
-                             related_name='suit')
+                             related_name='following')
     #  utilisateur qui est suivi
     followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                                       on_delete=models.CASCADE,
-                                      related_name='suivis_par')
+                                      related_name='followers')
 
     class Meta:
         # un utilisateur ne peut suivre un autre utilisateur qu'une seule fois

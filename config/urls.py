@@ -19,6 +19,9 @@ urlpatterns = [
     path('blog/create_ticket', blog.views.create_ticket, name='create_ticket'),
     path('blog/<int:ticket_id>', blog.views.view_ticket, name='view_ticket'),
     path('blog/<int:ticket_id>/edit', blog.views.edit_ticket, name='edit_ticket'),
+    path("subscribe/", blog.views.subscribe, name="subscribe"),
+    path('unsubscribe/<int:user_id>/', blog.views.unsubscribe, name='unsubscribe'),
+    path("profile/<int:user_id>/", blog.views.profile_view, name="profile"),
 ]
 if settings.DEBUG:
     urlpatterns += static(

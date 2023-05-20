@@ -12,6 +12,8 @@
                 <p>Vous êtes connectés en tant que {{ user }}.</p>
                 <p><a href="{% url 'home' %}">Accueil</a></p>
                 <p><a href="{% url 'create_ticket' %}">Créer un ticket</a></p> 
+                <p><a href="{% url 'subscribe' %}">S'abonner</a></p>
+                <p><a href="{% url 'profile' user_id=user.id %}">Profil</a></p>
                 <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
             {% endif %}
         </div>

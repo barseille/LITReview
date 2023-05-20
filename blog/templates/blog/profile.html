@@ -1,0 +1,31 @@
+<!-- blog/templates/blog/profile.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Profil de {{ user.username }}</h2>
+
+
+<h3>Suit :</h3>
+<ul>
+    {% for follow in following %}
+    <li>
+        {{ follow.followed_user.username }}
+        <form method="post" action="{% url 'unsubscribe' user_id=follow.followed_user.id %}">
+            {% csrf_token %}
+            <button type="submit">Se désabonner</button>
+        </form>
+    </li>
+    {% empty %}
+    <li>Cet utilisateur ne suit personne pour l'instant.</li>
+    {% endfor %}
+</ul>
+
+
+<h3>Suivi par :</h3>
+<ul>
+    {% for follow in followers %}
+    <li>{{ follow.user.username }}</li>
+    {% empty %}
+    <li>Cet utilisateur n'a pas encore d'abonnés.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

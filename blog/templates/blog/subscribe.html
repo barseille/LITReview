@@ -1,0 +1,95 @@
+<!-- blog/templates/blog/subscribe.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>S'abonner à d'autres utilisateurs</h2>
+    {% if subscribe_form.user.field.queryset.exists %}
+        <form method="post">
+            {% csrf_token %}
+            {% for field in subscribe_form %}
+                {% if field.name != "user" %}
+                    <p>{{ field.label_tag }} {{ field }}</p>
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                {% else %}
+                    {{ field }}  {# Affiche seulement le champ 'user', sans son label #}
+                    {% for error in field.errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            <button type="submit">S'abonner</button>
+        </form>
+    {% else %}
+        <p>Il n'y a plus d'autres utilisateurs à suivre.</p>
+    {% endif %}
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
+<!-- blog/templates/blog/subscribe.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>S'abonner à d'autres utilisateurs</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in subscribe_form %}
+            {% if field.name != "user" %}
+                <p>{{ field.label_tag }} {{ field }}</p>
+                {% if field.help_text %}
+                    <p class="help">{{ field.help_text }}</p>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            {% else %}
+                {{ field }}  {# Affiche seulement le champ 'user', sans son label #}
+                {% for error in field.errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        <button type="submit">S'abonner</button>
+    </form>
+{% endblock content %} {% endcomment %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

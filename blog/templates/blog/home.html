@@ -1,0 +1,22 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Flux "home.html"</h2>
+    <div class="grid-container">
+        {% for ticket in tickets %}
+            <div class="post">
+                <a href="{% url 'view_ticket' ticket.id %}">
+                    <h4>Ticket : {{ ticket.title }}</h4>
+                    <img src="{{ ticket.image.url }}">
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+
+
+
+
+
+

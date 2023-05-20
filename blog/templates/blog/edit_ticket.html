@@ -1,0 +1,17 @@
+# blog/templates/blog/edit_ticket.html
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Modifier le ticket "edit_ticket.html"</h2>
+    <form method="post">
+        {{ edit_ticket.as_p }}
+        {% csrf_token %}
+        <button type="submit" >Sauvegarder</button>
+    </form>
+   
+    <h3>Supprimer le ticket ? "edit_ticket.html"</h3>
+    <form method="post">
+        {{ delete_ticket }}
+        {% csrf_token %}
+        <button type="submit" >Supprimer</button>
+    </form>
+{% endblock content %}

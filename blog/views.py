@@ -9,8 +9,12 @@ from django.contrib.auth import get_user_model
 @login_required
 def home(request):
     tickets = models.Ticket.objects.all()
-    return render(request, 'blog/home.html', context={'tickets': tickets})
+    reviews = {ticket: models.Review.objects.filter(ticket=ticket) for ticket in tickets}
+    return render(request, 'blog/home.html', 
+                  context={'tickets': tickets, 'reviews': reviews})
 
+
+#-------------------------------------ticket--------------------------------------
 
 @login_required
 def create_ticket(request):
@@ -56,7 +60,7 @@ def edit_ticket(request, ticket_id):
     }
     return render(request, 'blog/edit_ticket.html', context=context)
 
-# -----------------------abonnement---------------------------------------------
+# -------------------------------abonnement(subscribe)---------------------------------------------
 
 
 @login_required
@@ -107,17 +111,19 @@ def subscribe(request):
     # On renvoie le template subscribe.html avec le contexte créé
     return render(request, "blog/subscribe.html", context=context)
 
+
+@login_required
 def unsubscribe(request, user_id):
     user_to_follow = get_object_or_404(get_user_model(), id=user_id)
     follow_object = models.UserFollows.objects.filter(user=request.user, followed_user=user_to_follow)
     
     if follow_object.exists():
-        follow_object.delete()
-    
+        follow_object.delete()  
     return redirect("profile", user_id=request.user.id)
 
 
-def profile_view(request, user_id):
+@login_required
+def profile(request, user_id):
     user = get_object_or_404(get_user_model(), id=user_id)
     following = models.UserFollows.objects.filter(user=user)
     followers = models.UserFollows.objects.filter(followed_user=user)
@@ -128,3 +134,22 @@ def profile_view(request, user_id):
         "followers":followers,
     }
     return render(request, "blog/profile.html", context=context)
+
+
+#------------------------------------critique(review)-------------
+
+@login_required
+def create_review(request, ticket_id):
+    ticket = get_object_or_404(models.Ticket, id=ticket_id)
+    form = forms.ReviewForm()
+    if request.method == "POST":
+        form = forms.ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            review.save()
+            return redirect("home")
+    else:
+        form = forms.ReviewForm(initial={'ticket': ticket})
+    return render(request, "blog/create_review.html", context={"form":form})

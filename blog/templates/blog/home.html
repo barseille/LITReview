@@ -1,18 +1,108 @@
-
 {% extends 'base.html' %}
+{% load templatetags %}
+
 {% block content %}
-    <h2>Flux "home.html"</h2>
-    <div class="grid-container">
-        {% for ticket in tickets %}
-            <div class="post">
-                <a href="{% url 'view_ticket' ticket.id %}">
-                    <h4>Ticket : {{ ticket.title }}</h4>
-                    <img src="{{ ticket.image.url }}">
-                </a>
+<h2 class="header">File d'actualités</h2>
+{% for ticket in tickets %}
+    <div class="ticket-container">
+        <h3 class="ticket-title"><strong>Titre :</strong> {{ ticket.title }}</h3>
+        <p><strong>Auteur du ticket :</strong> {{ ticket.user.username }}</p>
+        <p><strong>Date du ticket :</strong> {{ ticket.time_created|date:"d/m/Y" }}</p>
+        <p class="ticket-description"><strong>Description :</strong> {{ ticket.description }}</p>
+        <!-- Affiche le lien d'édition seulement si l'utilisateur actuel est l'auteur du ticket -->
+        {% if ticket.user == request.user %}
+            <p><a href="{% url 'edit_ticket' ticket.id %}" class="review-link">Modifier le Ticket</a></p>
+        {% endif %}
+        <img src="{{ ticket.image.url }}" class="ticket-image">
+        <!-- ... -->
+
+        <!-- Link to create a review for this ticket -->
+        <a href="{% url 'create_review' ticket_id=ticket.id %}" class="review-link">Créer une critique pour ce ticket</a>
+        
+        <!-- Display all reviews for this ticket -->
+        <h4 class="review-title">Critiques :</h4>
+        {% for review in reviews|get_item:ticket %}
+            <div class="review-container">
+                <p><strong>Auteur de la critique :</strong> {{ review.user.username }}</p>
+                <p><strong>Date de la critique :</strong> {{ review.time_created|date:"d/m/Y" }}</p>
+                <p class="review-rating"><strong>Note :</strong> {{ review.rating }}/5</p>
+                <p class="review-headline"><strong>Titre :</strong> {{ review.headline }}</p>
+                <p class="review-body"><strong>Commentaire :</strong> {{ review.body }}</p>
+                <!-- ... -->
             </div>
+        {% empty %}
+            <p class="no-review-message">Pas encore de critiques pour ce ticket.</p>
         {% endfor %}
     </div>
+{% endfor %}
 {% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends 'base.html' %}
+{% load templatetags %}
+
+{% block content %}
+<h2 class="header">File d'actualités</h2>
+{% for ticket in tickets %}
+    <div class="ticket-container">
+        <h3 class="ticket-title"><strong>Titre :</strong> {{ ticket.title }}</h3>
+        <p><strong>Auteur du ticket :</strong> {{ ticket.user.username }}</p>
+        <p><strong>Date du ticket :</strong> {{ ticket.time_created|date:"d/m/Y" }}</p>
+        <p class="ticket-description"><strong>Description :</strong> {{ ticket.description }}</p>
+        <p><a href="{% url 'edit_ticket' ticket.id %}">Modifier le Ticket "view_ticket.html"</a></p>
+        <img src="{{ ticket.image.url }}" class="ticket-image">
+        <!-- ... -->
+
+        <!-- Link to create a review for this ticket -->
+        <a href="{% url 'create_review' ticket_id=ticket.id %}" class="review-link">Créer une critique pour ce ticket</a>
+        
+        <!-- Display all reviews for this ticket -->
+        <h4 class="review-title">Critiques :</h4>
+        {% for review in reviews|get_item:ticket %}
+            <div class="review-container">
+                <p><strong>Auteur de la critique :</strong> {{ review.user.username }}</p>
+                <p><strong>Date de la critique :</strong> {{ review.time_created|date:"d/m/Y" }}</p>
+                <p class="review-rating"><strong>Note :</strong> {{ review.rating }}/5</p>
+                <p class="review-headline"><strong>Titre :</strong> {{ review.headline }}</p>
+                <p class="review-body"><strong>Commentaire :</strong> {{ review.body }}</p>
+                <!-- ... -->
+            </div>
+        {% empty %}
+            <p class="no-review-message">Pas encore de critiques pour ce ticket.</p>
+        {% endfor %}
+    </div>
+{% endfor %}
+{% endblock content %} {% endcomment %}
+
+
+
+
+
+
+
+
+
 
 
 

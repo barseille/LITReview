@@ -21,8 +21,10 @@ urlpatterns = [
     path('blog/<int:ticket_id>/edit', blog.views.edit_ticket, name='edit_ticket'),
     path("subscribe/", blog.views.subscribe, name="subscribe"),
     path('unsubscribe/<int:user_id>/', blog.views.unsubscribe, name='unsubscribe'),
-    path("profile/<int:user_id>/", blog.views.profile_view, name="profile"),
+    path("profile/<int:user_id>/", blog.views.profile, name="profile"),
+    path('create_review/<int:ticket_id>/', blog.views.create_review, name='create_review'),
 ]
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

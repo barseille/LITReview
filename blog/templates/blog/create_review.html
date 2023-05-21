@@ -1,0 +1,11 @@
+<!-- blog/templates/blog/create_review.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Créer une critique en réponse à : - create_review.html</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Créer une critique</button>
+    </form>
+{% endblock content %}

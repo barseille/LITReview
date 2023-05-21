@@ -19,6 +19,14 @@ class SubscribeForm(forms.Form):
     user = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,
-    )    
+    )   
+    
+class ReviewForm(forms.ModelForm):
+    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=forms.RadioSelect)
+    
+    class Meta:
+        model = models.Review
+        fields = ['rating', 'headline', 'body']
+     
 
     

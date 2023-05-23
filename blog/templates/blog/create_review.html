@@ -1,11 +1,12 @@
 <!-- blog/templates/blog/create_review.html -->
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Créer une critique en réponse à : - create_review.html</h2>
+    <h2>Ajouter une critique : </h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Créer une critique</button>
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Envoyer</button>
     </form>
 {% endblock content %}

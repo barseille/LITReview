@@ -1,146 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap');
 
 
-/* The sidebar menu */
 .sidebar {
-    height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 220px; /* Set the width of the sidebar */
-    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    background-color: #8dcf37;
-    color:  #ffffe6;
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-/* The navigation menu links */
-.sidebar a {
-    text-decoration: none;
-    color:  #ffffe6;
-    display: block;
-}
-
-/* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
-    color: #f1f1f1;
-}
-
-/* Style page content */
-.main {
-    margin-left: 240px; /* Same as the width of the sidebar */
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    background-color: #007BFF; 
     padding: 20px;
+    color: #FFF; 
+    padding: 10px;
 }
 
-.avatar {
-    width: 80%;
-    border-radius: 10%;
-    display: block;
-    margin: auto;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
+.main-content {
+    margin-left: 500px;
     padding: 20px;
-    text-align: center;
+    width:60%;
+    /* margin:auto; */
+}
+.nav-link{
+    color:#FFF
+}
+.nav-link:hover {
+    color: #01325a;
 }
 
-.post img {
-    width: 80%;
-    border-radius: 5px;
-}
-
-body {
-    font-family: "Wix Madefor Display", sans-serif;
-    color: #333;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.header {
-    color: #1a202c;
-    font-size: 24px;
-    padding: 20px;
-    text-align: center;
-    background-color: #edf2f7;
-    width: 100%;
-}
-
-.ticket-container {
-    margin: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-}
-
-.ticket-container:hover {
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.2);
-}
-
-.ticket-title {
-    color: #2d3748;
-    font-size: 18px;
-}
-
-.ticket-description {
-    color: #4a5568;
-    font-size: 16px;
-}
-
-.ticket-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
-
-.review-link {
-    display: inline-block;
-    background-color: #2b6cb0;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-}
-
-.review-link:hover {
-    background-color: #2c5282;
-}
-
-.review-title {
-    color: #2d3748;
-    font-size: 16px;
+.ticket_button{
     margin-top: 20px;
 }
 
-.review-container {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f7fafc;
-    border-radius: 5px;
-    width: 100%;
-}
 
-.review-rating, .review-headline, .review-body {
-    color: #4a5568;
-}
-
-.no-review-message {
-    color: #718096;
-}
 

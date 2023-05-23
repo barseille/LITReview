@@ -4,38 +4,37 @@ from django.contrib.auth.decorators import login_required
 from . import models
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from itertools import chain
 
 
 @login_required
 def home(request):
     tickets = models.Ticket.objects.all()
-    reviews = {ticket: models.Review.objects.filter(ticket=ticket) for ticket in tickets}
-    return render(request, 'blog/home.html', 
-                  context={'tickets': tickets, 'reviews': reviews})
+    reviews = models.Review.objects.all()
+    posts = sorted(
+        chain(tickets, reviews), 
+        key=lambda post: post.time_created, 
+        reverse=True
+    )
+    return render(request, 'blog/home.html', context={'posts': posts})
 
+#------------------------ticket--------------------
+# views.py
+from django.views.generic import CreateView
+from .forms import TicketForm
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-#-------------------------------------ticket--------------------------------------
+class TicketCreateView(LoginRequiredMixin, CreateView):
+    model = models.Ticket
+    form_class = TicketForm
+    template_name = 'blog/create_ticket.html'
+    success_url = reverse_lazy('home')
 
-@login_required
-def create_ticket(request):
-    ticket_form = forms.TicketForm()
-    if request.method == 'POST':
-        ticket_form = forms.TicketForm(request.POST, request.FILES)  
-        if ticket_form.is_valid():
-            ticket = ticket_form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
-            return redirect('home')
-    context = {
-        'ticket_form': ticket_form,
-    }
-    return render(request, 'blog/create_ticket.html', context=context)
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-
-@login_required
-def view_ticket(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    return render(request, 'blog/view_ticket.html', {'ticket': ticket})
 
 @login_required
 def edit_ticket(request, ticket_id):
@@ -45,7 +44,7 @@ def edit_ticket(request, ticket_id):
     
     if request.method == 'POST':
         if 'edit_ticket' in request.POST:
-            edit_ticket = forms.TicketForm(request.POST, instance=ticket)
+            edit_ticket = forms.TicketForm(request.POST,request.FILES, instance=ticket)
             if edit_ticket.is_valid():
                 edit_ticket.save()
                 return redirect('home')
@@ -54,13 +53,17 @@ def edit_ticket(request, ticket_id):
             if delete_ticket.is_valid():
                 ticket.delete()
                 return redirect('home')
+            
+    else:
+        edit_ticket = forms.TicketForm(instance=ticket)
+        delete_ticket = forms.DeleteTicketForm()
     context = {
         'edit_ticket': edit_ticket,
         'delete_ticket': delete_ticket,
     }
     return render(request, 'blog/edit_ticket.html', context=context)
 
-# -------------------------------abonnement(subscribe)---------------------------------------------
+# ------------------------abonnement(subscribe)--------------
 
 
 @login_required
@@ -136,7 +139,7 @@ def profile(request, user_id):
     return render(request, "blog/profile.html", context=context)
 
 
-#------------------------------------critique(review)-------------
+#-------------------critique(review)-------------
 
 @login_required
 def create_review(request, ticket_id):
@@ -153,3 +156,11 @@ def create_review(request, ticket_id):
     else:
         form = forms.ReviewForm(initial={'ticket': ticket})
     return render(request, "blog/create_review.html", context={"form":form})
+
+
+
+# reviews = Review.objects.filter(
+#         Q(user__in=users_followed) | Q(ticket__user=user))
+
+# posts = sorted(chain(reviews, tickets),
+#                    key=lambda post: post.time_created, reverse=True)

@@ -1,13 +1,15 @@
-# authentication/templates/authentication/signup.html
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
 {% block content %}
     <h2>Inscription</h2>
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
-    <form method="post">
-        {{ form.as_p }}
+    <form method="post" class="mb-3">
         {% csrf_token %}
-        <button type="submit" >S’inscrire</button>
+        {{ form|crispy }}
+        <div class="d-flex justify-content-between">
+            <button type="submit"  class="btn btn-primary">S’inscrire</button>
+            <a href="{% url 'login' %}" class="btn btn-outline-primary">Retour</a>
+        </div>
     </form>
+
 {% endblock content %}

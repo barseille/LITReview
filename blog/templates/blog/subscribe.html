@@ -1,95 +1,32 @@
-<!-- blog/templates/blog/subscribe.html -->
+
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>S'abonner à d'autres utilisateurs</h2>
-    {% if subscribe_form.user.field.queryset.exists %}
-        <form method="post">
-            {% csrf_token %}
-            {% for field in subscribe_form %}
-                {% if field.name != "user" %}
-                    <p>{{ field.label_tag }} {{ field }}</p>
-                    {% if field.help_text %}
-                        <p class="help">{{ field.help_text }}</p>
-                    {% endif %}
-                    {% for error in field.errors %}
-                        <p class="error">{{ error }}</p>
-                    {% endfor %}
-                {% else %}
-                    {{ field }}  {# Affiche seulement le champ 'user', sans son label #}
-                    {% for error in field.errors %}
-                        <p class="error">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-            <button type="submit">S'abonner</button>
-        </form>
-    {% else %}
-        <p>Il n'y a plus d'autres utilisateurs à suivre.</p>
-    {% endif %}
-{% endblock content %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %} 
-<!-- blog/templates/blog/subscribe.html -->
-{% extends 'base.html' %}
-
-{% block content %}
-    <h2>S'abonner à d'autres utilisateurs</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% for field in subscribe_form %}
-            {% if field.name != "user" %}
-                <p>{{ field.label_tag }} {{ field }}</p>
-                {% if field.help_text %}
-                    <p class="help">{{ field.help_text }}</p>
-                {% endif %}
-                {% for error in field.errors %}
-                    <p class="error">{{ error }}</p>
+    <div class="form-content">
+        <h2 class="form-title">S'abonner à d'autres utilisateurs</h2>
+        {% comment %} Vérification s'il existe des utilisateurs auxquels s'abonner {% endcomment %}
+        {% if subscribe_form.user.field.queryset.exists %}
+            <form method="post">
+                {% csrf_token %}
+                {% for field in subscribe_form %}
+                    <div class="form-group">
+                        {% comment %} Affiche le label et le champ sauf si le nom du champ est "user" {% endcomment %}
+                        {% if field.name != "user" %}
+                            <label>{{ field.label }}</label>
+                            {{ field }}
+                        {% else %}
+                            {% comment %} Pour le champ "user", affiche seulement le champ sans le label {% endcomment %}
+                            {{ field }} 
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
                 {% endfor %}
-            {% else %}
-                {{ field }}  {# Affiche seulement le champ 'user', sans son label #}
-                {% for error in field.errors %}
-                    <p class="error">{{ error }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-        <button type="submit">S'abonner</button>
-    </form>
-{% endblock content %} {% endcomment %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <button type="submit" class="btn btn-primary">S'abonner</button>
+            </form>
+        {% else %}
+            <p>Il n'y a plus d'autres utilisateurs à suivre.</p>
+        {% endif %}
+    </div>
+{% endblock content %} 

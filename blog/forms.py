@@ -3,13 +3,17 @@ from django import forms
 from . import models
 from django.contrib.auth import get_user_model
 
-  
+
 class TicketForm(forms.ModelForm):
     edit_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     
     class Meta:
         model = models.Ticket
         fields = ['title', 'description', 'image'] 
+ 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['image'].widget = forms.FileInput() 
             
 class DeleteTicketForm(forms.Form):
     delete_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
@@ -22,11 +26,15 @@ class SubscribeForm(forms.Form):
     )   
     
 class ReviewForm(forms.ModelForm):
-    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=forms.RadioSelect)
+    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=forms.RadioSelect, label="Evalution")
     
     class Meta:
         model = models.Review
         fields = ['rating', 'headline', 'body']
-     
+        labels = {
+                'headline': 'Titre',
+                'body': 'Commentaire',
+                }
+        
 
     

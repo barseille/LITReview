@@ -23,10 +23,12 @@ class Ticket(models.Model):
         
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
+        self.refresh_from_db()
         self.resize_image()
+        super().save(*args, **kwargs)
+
  
- 
-     
+   
 class UserFollows(models.Model):
     # utilisateur qui suit un autre utilisateur
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
@@ -40,6 +42,8 @@ class UserFollows(models.Model):
     class Meta:
         # un utilisateur ne peut suivre un autre utilisateur qu'une seule fois
         unique_together = ('user', 'followed_user')
+     
+     
         
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)

@@ -1,4 +1,4 @@
-# authentication/validators.py
+
 from django.core.exceptions import ValidationError
 
 

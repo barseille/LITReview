@@ -1,37 +1,53 @@
+# home.html
 {% extends 'base.html' %}
 {% load templatetags %}
 
 {% block content %}
 
-<h2 class="mb-4">Fil d'actualités</h2>
+<h2 class="mb-4">Flux</h2>
 
 {% for post in posts %}
+
     <div class="card mb-4">
         {% if post|classname == 'Ticket' %}
-            <h3 class="card-header"><strong>Titre :</strong> {{ post.title }}</h3>
+
+            <h3 class="card-header"><strong>{{ post.user.username|upper }} a demandé une critique</strong></h3>
+
             <div class="card-body">
-                <p><strong>Description :</strong> {{ post.description }}</p>
+               
+   
                 <div class="d-flex justify-content-end small font-italic text-muted mb-2">
-                    <p class="mr-2">{{ post.user.username|upper }}</p>
-                    <p>le {{ post.time_created|date:"d/m/Y" }}</p>
+                    <p>{{ post.time_created|date:"H:i, d F Y"}}</p>
                 </div>
+                <p><strong>Titre :</strong> {{ post.title }}</p>
+                <p><strong>Description :</strong> {{ post.description }}</p>
                 <!-- Affiche le lien de modification seulement si l'utilisateur est l'auteur du ticket -->
                 {% if post.user == request.user %}
                     <p><a href="{% url 'edit_ticket' post.id %}" class="btn btn-info">Modifier le Ticket</a></p>
                 {% endif %}
                 <img src="{{ post.image.url }}" class="img-fluid"></br>
-                <a href="{% url 'create_review' ticket_id=post.id %}" class="btn btn-primary ticket_button">Ajouter une critique</a>
+                <a href="{% url 'create_review' ticket_id=post.id %}" class="btn btn-primary ticket_button">Créer une critique</a>
             </div>
 
         {% elif post|classname == 'Review' %}
+        
             <div class="card-header">
                 <h3><strong>{{ post.user.username|upper }} a publié une critique</strong></h3>
-                <p>le {{ post.time_created|date:"d/m/Y à H:i" }}</p>
+                
             </div>
+ 
             <div class="card-body">
+                <div class="d-flex justify-content-end small font-italic text-muted mb-2">
+                    <p>{{ post.time_update|date:"H:i, d F Y" }}</p>
+                </div>
                 <h4><strong>Titre :</strong> {{ post.headline }}</h4>
                 <p><strong>Note :</strong> {{ post.rating }}/5</p>
                 <p><strong>Critique :</strong> {{ post.body }}</p>
+
+                {% if post.user == request.user %}
+                <p><a href="{% url 'edit_review' post.id %}" class="btn btn-info">Modifier la Critique</a></p>
+                {% endif %}
+
                 <div class="card mt-3">
                     <div class="card-body">
                         <p><strong>Auteur du ticket :</strong> {{ post.ticket.user.username|upper }}</p>

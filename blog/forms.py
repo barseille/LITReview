@@ -24,7 +24,8 @@ class SubscribeForm(forms.Form):
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,
     )   
-    
+ 
+
 class ReviewForm(forms.ModelForm):
     rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=forms.RadioSelect, label="Evalution")
     
@@ -34,7 +35,9 @@ class ReviewForm(forms.ModelForm):
         labels = {
                 'headline': 'Titre',
                 'body': 'Commentaire',
-                }
+                 }
         
+class DeleteReviewForm(forms.Form):
+    delete_review = forms.BooleanField(widget=forms.HiddenInput(), initial=True)
 
     

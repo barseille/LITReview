@@ -5,6 +5,11 @@ from . import models
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from itertools import chain
+from django.views.generic import CreateView
+from .forms import TicketForm
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 
 @login_required
@@ -19,11 +24,7 @@ def home(request):
     return render(request, 'blog/home.html', context={'posts': posts})
 
 #------------------------ticket--------------------
-# views.py
-from django.views.generic import CreateView
-from .forms import TicketForm
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
     model = models.Ticket
@@ -67,52 +68,38 @@ def edit_ticket(request, ticket_id):
 
 
 @login_required
-def subscribe(request):
-    """ 
-    Ici, nous récupérons la liste des utilisateurs que l'utilisateur connecté suit déjà.
-    La méthode `values_list` renvoie une liste de tuples. L'argument `flat=True` rend la liste "plate",
-    c'est-à-dire une simple liste d'IDs d'utilisateurs.
-    """
-    already_followed = models.UserFollows.objects.filter(user=request.user).values_list('followed_user', flat=True)
+def subscribe(request, user_id):
+    user = get_object_or_404(get_user_model(), id=user_id)
 
-    # Création d'une instance du formulaire SubscribeForm
-    form = forms.SubscribeForm()
+    # Liste des utilisateurs que l'utilisateur actuel suit déjà
+    followed_users = models.UserFollows.objects.filter(user=request.user).values_list('followed_user', flat=True)
 
-    """
-    On modifie le champ "user" du formulaire pour exclure :
-    - les utilisateurs que l'utilisateur connecté suit déjà (already_followed)
-    - l'utilisateur connecté lui-même (request.user.id)
-    """
-    form.fields["user"].queryset = get_user_model().objects.exclude(id__in=already_followed).exclude(id=request.user.id)
-    
-    # Si la requête est de type POST (soumission du formulaire)
+    # Liste de tous les utilisateurs à l'exception de l'utilisateur actuel et ceux qu'il suit déjà
+    all_users = get_user_model().objects.exclude(id__in=followed_users).exclude(id=request.user.id)
+
+    # Liste des instances d'UserFollows où l'utilisateur actuel est le suiveur
+    following = models.UserFollows.objects.filter(user=request.user)
+
+    # Liste des instances d'UserFollows où l'utilisateur actuel est le suivi
+    followers = models.UserFollows.objects.filter(followed_user=request.user)
+
     if request.method == "POST":
-        # On crée une nouvelle instance du formulaire avec les données envoyées par l'utilisateur
-        form = forms.SubscribeForm(request.POST)
+        user_to_follow = get_object_or_404(get_user_model(), id=request.POST.get('user_id'))
+        if user_to_follow not in followed_users:
+            models.UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
+        else:
+            models.UserFollows.objects.filter(user=request.user, followed_user=user_to_follow).delete()
 
-        # On applique la même logique d'exclusion pour le queryset du champ "user" du formulaire
-        form.fields["user"].queryset = get_user_model().objects.exclude(id__in=already_followed).exclude(id=request.user.id)
-
-        # On vérifie que les données envoyées par l'utilisateur sont valides
-        if form.is_valid():
-            # On récupère la liste des utilisateurs que l'utilisateur connecté veut suivre
-            followed_users = form.cleaned_data["user"]
-            for user in followed_users:
-                # On vérifie si l'utilisateur connecté suit déjà l'utilisateur sélectionné
-                exists = models.UserFollows.objects.filter(user=request.user, followed_user=user).exists()
-
-                # Si ce n'est pas le cas, on crée une nouvelle instance de UserFollows
-                if not exists:
-                    models.UserFollows.objects.create(user=request.user, followed_user=user)
-
-            # On redirige l'utilisateur vers la page d'accueil après la soumission du formulaire
-            return redirect("home")
+    context = {
+        "user": user,
+        "all_users": all_users,
+        "followed_users": followed_users,
+        "following": following,
+        "followers": followers,
+    }
     
-    # On crée un dictionnaire avec les données à envoyer au template
-    context = {"subscribe_form": form}
-    
-    # On renvoie le template subscribe.html avec le contexte créé
     return render(request, "blog/subscribe.html", context=context)
+
 
 
 @login_required
@@ -122,21 +109,7 @@ def unsubscribe(request, user_id):
     
     if follow_object.exists():
         follow_object.delete()  
-    return redirect("profile", user_id=request.user.id)
-
-
-@login_required
-def profile(request, user_id):
-    user = get_object_or_404(get_user_model(), id=user_id)
-    following = models.UserFollows.objects.filter(user=user)
-    followers = models.UserFollows.objects.filter(followed_user=user)
-    
-    context = {
-        "user": user,
-        "following": following,
-        "followers":followers,
-    }
-    return render(request, "blog/profile.html", context=context)
+    return redirect("subscribe", user_id=request.user.id)
 
 
 #-------------------critique(review)-------------
@@ -145,6 +118,7 @@ def profile(request, user_id):
 def create_review(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     form = forms.ReviewForm()
+
     if request.method == "POST":
         form = forms.ReviewForm(request.POST)
         if form.is_valid():
@@ -158,6 +132,56 @@ def create_review(request, ticket_id):
     return render(request, "blog/create_review.html", context={"form":form})
 
 
+@login_required
+def edit_review(request, review_id):
+    review = get_object_or_404(models.Review, id=review_id)
+    edit_review = forms.ReviewForm(instance=review)
+    delete_review = forms.DeleteReviewForm()
+    
+    if request.method == "POST":
+        if "edit_review" in request.POST:
+            edit_review = forms.ReviewForm(request.POST, instance=review)
+            if edit_review.is_valid():
+                edit_review.save()
+                return redirect("home")
+        else:
+            print(edit_review.errors)
+        if "delete_review" in request.POST:
+            delete_review = forms.DeleteReviewForm(request.POST)
+            if delete_review.is_valid():
+                review.delete()
+                return redirect("home")
+    else:
+        edit_review = forms.ReviewForm(instance=review)
+        delete_review = forms.DeleteReviewForm()
+        
+    context = {
+        "edit_review": edit_review,
+        "delete_review": delete_review,
+    }
+    return render(request, "blog/edit_review.html", context=context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@login_required
+def my_tickets(request):
+    my_tickets = models.Ticket.objects.filter(user=request.user)
+    has_tickets = my_tickets.exists()
+    return render(request, "blog/my_tickets.html", {"tickets": my_tickets, "has_tickets": has_tickets})
 
 # reviews = Review.objects.filter(
 #         Q(user__in=users_followed) | Q(ticket__user=user))

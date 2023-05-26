@@ -1,32 +1,43 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="form-content">
-        <h2 class="form-title">S'abonner à d'autres utilisateurs</h2>
-        {% comment %} Vérification s'il existe des utilisateurs auxquels s'abonner {% endcomment %}
-        {% if subscribe_form.user.field.queryset.exists %}
-            <form method="post">
-                {% csrf_token %}
-                {% for field in subscribe_form %}
-                    <div class="form-group">
-                        {% comment %} Affiche le label et le champ sauf si le nom du champ est "user" {% endcomment %}
-                        {% if field.name != "user" %}
-                            <label>{{ field.label }}</label>
-                            {{ field }}
-                        {% else %}
-                            {% comment %} Pour le champ "user", affiche seulement le champ sans le label {% endcomment %}
-                            {{ field }} 
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <p class="error">{{ error }}</p>
-                        {% endfor %}
-                    </div>
+
+    <div class="content-container">
+        <h2 class="content-header">S'abonner à d'autres utilisateurs</h2>
+        <div>
+            <h3 class="content-subheader content-header">Liste des utilisateurs :</h3>
+            <ul class="list-group">
+                {% for other_user in all_users %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ other_user.username|upper }}
+                        <form method="post" action="{% url 'subscribe' user_id=other_user.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ other_user.id }}">
+                            <button type="submit" class="btn btn-primary">S'abonner</button>
+                        </form>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Il n'y a plus d'autres utilisateurs à suivre.</li>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">S'abonner</button>
-            </form>
-        {% else %}
-            <p>Il n'y a plus d'autres utilisateurs à suivre.</p>
-        {% endif %}
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="content-subheader content-header">Abonnés :</h3>
+            <ul class="list-group">
+                {% for follow in following %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ follow.followed_user.username|upper }}
+                        <form method="post" action="{% url 'unsubscribe' user_id=follow.followed_user.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ follow.followed_user.id }}">
+                            <button type="submit" class="btn btn-danger">Désabonner</button>
+                        </form>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Vous ne suivez personne pour l'instant.</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-{% endblock content %} 
+{% endblock content %}

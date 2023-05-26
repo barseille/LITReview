@@ -30,11 +30,11 @@ class Ticket(models.Model):
  
    
 class UserFollows(models.Model):
-    # utilisateur qui suit un autre utilisateur
+    # utilisateur qui suit un autre utilisateur (ex : user=jean)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              related_name='following')
-    #  utilisateur qui est suivi
+    # utilisateur qui est suivi par user (followed_user=bob, donc jean suit bob)
     followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                                       on_delete=models.CASCADE,
                                       related_name='followers')
@@ -44,7 +44,7 @@ class UserFollows(models.Model):
         unique_together = ('user', 'followed_user')
      
      
-        
+# models.py       
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0),
@@ -54,3 +54,4 @@ class Review(models.Model):
     headline = models.CharField(max_length=128)
     body = models.TextField(max_length=8192, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)

@@ -18,11 +18,11 @@ urlpatterns = [
     path('home/', blog.views.home, name='home'),
     path('signup/', authentication.views.SignupPageView.as_view(), name='signup'),
     path('blog/create_ticket/', TicketCreateView.as_view(), name='create_ticket'),
-    path('blog/<int:ticket_id>/edit', blog.views.edit_ticket, name='edit_ticket'),
-    path("subscribe/", blog.views.subscribe, name="subscribe"),
+    path('blog/<int:ticket_id>/edit_ticket', blog.views.edit_ticket, name='edit_ticket'),
+    path("subscribe/<int:user_id>/", blog.views.subscribe, name="subscribe"),
     path('unsubscribe/<int:user_id>/', blog.views.unsubscribe, name='unsubscribe'),
-    path("profile/<int:user_id>/", blog.views.profile, name="profile"),
     path('create_review/<int:ticket_id>/', blog.views.create_review, name='create_review'),
+    path('blog/<int:review_id>/edit_review/', blog.views.edit_review, name="edit_review")
 ]
 if settings.DEBUG:
     urlpatterns += static(

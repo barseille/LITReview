@@ -1,0 +1,17 @@
+<!-- ticket.html -->
+<div class="card mb-4">
+    <h3 class="card-header"><strong>{{ ticket.user.username|upper }} a demandé une critique</strong></h3>
+    <div class="card-body">
+        <div class="d-flex justify-content-end small font-italic text-muted mb-2">
+            <p>{{ ticket.time_created|date:"H:i, d F Y"}}</p>
+        </div>
+        <p><strong>Titre :</strong> {{ ticket.title }}</p>
+        <p><strong>Description :</strong> {{ ticket.description }}</p>
+        {% if ticket.user == request.user %}
+            <p><a href="{% url 'edit_ticket' ticket.id %}" class="btn btn-info">Modifier le Ticket</a></p>
+        {% endif %}
+        <img src="{{ ticket.image.url }}" class="img-fluid"></br>
+        <a href="{% url 'create_review' ticket_id=ticket.id %}" class="btn btn-primary ticket_button">Créer une critique</a>
+    </div>
+</div>
+

@@ -10,6 +10,7 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = models.Ticket
         fields = ['title', 'description', 'image'] 
+        labels = {"title" : "Titre du ticket"}
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,11 +34,22 @@ class ReviewForm(forms.ModelForm):
         model = models.Review
         fields = ['rating', 'headline', 'body']
         labels = {
-                'headline': 'Titre',
+                'headline': 'Titre de la critique',
                 'body': 'Commentaire',
                  }
         
 class DeleteReviewForm(forms.Form):
     delete_review = forms.BooleanField(widget=forms.HiddenInput(), initial=True)
 
-    
+
+
+class SearchUserForm(forms.Form):
+    username = forms.CharField(
+        label='', 
+        error_messages={
+            'required': '', 
+        },
+        widget=forms.TextInput(attrs={'class': 'form-control', 
+                                      'style': 'width:50%',
+                                      'placeholder': 'Rechercher par nom'})
+    )

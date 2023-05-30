@@ -32,4 +32,13 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
+.list-group {
+    list-style-type: none;
+    padding-left: 0;
+}
+.errorlist{
+    list-style-type: none;
+}
+/* .search_bar{
+    width: 50%;
+} */

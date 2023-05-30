@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.conf import settings
 from django.conf.urls.static import static
 from blog.views import TicketCreateView
+from blog.views import CreateTicketAndReview
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,7 +23,8 @@ urlpatterns = [
     path("subscribe/<int:user_id>/", blog.views.subscribe, name="subscribe"),
     path('unsubscribe/<int:user_id>/', blog.views.unsubscribe, name='unsubscribe'),
     path('create_review/<int:ticket_id>/', blog.views.create_review, name='create_review'),
-    path('blog/<int:review_id>/edit_review/', blog.views.edit_review, name="edit_review")
+    path('blog/<int:review_id>/edit_review/', blog.views.edit_review, name="edit_review"),
+    path('blog/create_ticket_and_review/', CreateTicketAndReview.as_view(), name='create_ticket_and_review'),
 ]
 if settings.DEBUG:
     urlpatterns += static(

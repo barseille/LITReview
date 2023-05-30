@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h2>Créer un ticket et une critique</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+     
+        {{ form_ticket|crispy }}
+        {{ form_review|crispy }}
+
+        <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+{% endblock %}
+

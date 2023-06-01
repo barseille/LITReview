@@ -1,26 +1,35 @@
 <!-- review.html -->
 <div class="card mb-4">
-    <div class="card-header">
-        <h3><strong>{{ review.user.username|upper }} a publié une critique</strong></h3>
+
+    <div class="card-header text-success">
+        {# username fait référence à un champ du modèle User intégré dans Django #}
+        {# review fait référence à l'objet post de la boucle dans home.html #}
+        <h3><strong>{{ review.user.username|capfirst }} a publié une critique</strong></h3>
     </div>
+
     <div class="card-body">
+
         <div class="d-flex justify-content-end small font-italic text-muted mb-2">
             <p>{{ review.time_update|date:"H:i, d F Y" }}</p>
         </div>
+
         <h4><strong>Titre :</strong> {{ review.headline }}</h4>
         <p><strong>Note :</strong> {{ review.rating }}/5</p>
         <p><strong>Critique :</strong> {{ review.body }}</p>
+
         {% if review.user == request.user %}
             <p><a href="{% url 'edit_review' review.id %}" class="btn btn-info">Modifier la Critique</a></p>
         {% endif %}
+
         <div class="card mt-3">
             <div class="card-body">
-                <p><strong>Auteur du ticket :</strong> {{ review.ticket.user.username|upper }}</p>
+                <p><strong>Auteur du ticket :</strong> {{ review.ticket.user.username|capfirst }}</p>
                 <p><strong>Titre du ticket :</strong> {{ review.ticket.title }}</p>
                 <p><strong>Description :</strong> {{ review.ticket.description }}</p>
                 <img src="{{ review.ticket.image.url }}" class="img-fluid"> 
             </div>
         </div>
+
     </div>
 </div>
 

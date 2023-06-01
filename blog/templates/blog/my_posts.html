@@ -1,25 +1,45 @@
 {% extends 'base.html' %}
 {% load templatetags %}
 
-{# home.html #}
-
 {% block content %}
 
-<h2 class="mb-4">Flux</h2>
+<h2 class="mb-4">Mes Posts</h2>
 
 {% for post in posts %}
 
     {% if post|classname == 'Ticket' %}
-        {# ticket = variable utilisée dans ticket.html #}
+        {# Affiche toujours le Ticket même s'il a une Review associée #}
         {% include 'blog/partials/ticket.html' with ticket=post %}
-    {% elif post|classname == 'Review' %}
-        {# review = variable utilisée dans review.html #}
+        {# Si le 'Ticket' a une 'Review' associée, affiche aussi la Review #}
+        {% if post.review_set.exists %}
+            {% include 'blog/partials/review.html' with review=post.review_set.first %}
+        {% endif %}
+    {% elif post|classname == 'Review' and post.ticket == null %}
         {% include 'blog/partials/review.html' with review=post %}
     {% endif %}
 
 {% endfor %}
+{% endblock content %}
 
-{% comment %} {% for post in posts %}
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends 'base.html' %}
+{% load templatetags %}
+
+{% block content %}
+
+<h2 class="mb-4">Mes Posts</h2>
+
+{% for post in posts %}
 
     {% if post|classname == 'Ticket' %}
         {# Si le 'Ticket' a une 'Review' associée #}
@@ -29,10 +49,9 @@
         {% else %}
             {% include 'blog/partials/ticket.html' with ticket=post %}
         {% endif %}
-
     {% elif post|classname == 'Review' and post.ticket == null %}
         {% include 'blog/partials/review.html' with review=post %}
     {% endif %}
 
-{% endfor %} {% endcomment %}
-{% endblock content %}
+{% endfor %}
+{% endblock content %} {% endcomment %}

@@ -14,6 +14,7 @@ class TicketForm(forms.ModelForm):
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # forms.FileInput() : champ de saisi de fichier
         self.fields['image'].widget = forms.FileInput() 
             
 class DeleteTicketForm(forms.Form):

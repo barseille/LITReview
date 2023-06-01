@@ -13,7 +13,7 @@ class Ticket(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     
     
-    IMAGE_MAX_SIZE = (800, 800)
+    IMAGE_MAX_SIZE = (400, 400)
     
     def resize_image(self):
         if self.image:

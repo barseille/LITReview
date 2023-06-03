@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from . import forms
 from django.contrib.auth import login, authenticate
 from django.conf import settings
 from django.views.generic import View
+from . import forms
 
 
 class LoginPageView(View):

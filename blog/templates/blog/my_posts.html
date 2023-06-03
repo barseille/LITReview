@@ -8,18 +8,25 @@
 {% for post in posts %}
 
     {% if post|classname == 'Ticket' %}
-        {# Affiche toujours le Ticket même s'il a une Review associée #}
+
+        {# ticket = variable utilisée dans ticket.html #}
         {% include 'blog/partials/ticket.html' with ticket=post %}
-        {# Si le 'Ticket' a une 'Review' associée, affiche aussi la Review #}
-        {% if post.review_set.exists %}
-            {% include 'blog/partials/review.html' with review=post.review_set.first %}
-        {% endif %}
-    {% elif post|classname == 'Review' and post.ticket == null %}
+
+    {% elif post|classname == 'Review' %}
+        {# review = variable utilisée dans review.html #}
         {% include 'blog/partials/review.html' with review=post %}
+        
     {% endif %}
 
 {% endfor %}
-{% endblock content %}
+
+{% endblock content%}
+
+
+
+
+
+
 
 
 
@@ -42,12 +49,11 @@
 {% for post in posts %}
 
     {% if post|classname == 'Ticket' %}
-        {# Si le 'Ticket' a une 'Review' associée #}
+        {# Affiche toujours le Ticket même s'il a une Review associée #}
+        {% include 'blog/partials/ticket.html' with ticket=post %}
+        {# Si le 'Ticket' a une 'Review' associée, affiche aussi la Review #}
         {% if post.review_set.exists %}
-            {# retourne la première instance de Review associée à post, qui est un Ticket #}
             {% include 'blog/partials/review.html' with review=post.review_set.first %}
-        {% else %}
-            {% include 'blog/partials/ticket.html' with ticket=post %}
         {% endif %}
     {% elif post|classname == 'Review' and post.ticket == null %}
         {% include 'blog/partials/review.html' with review=post %}
@@ -55,3 +61,13 @@
 
 {% endfor %}
 {% endblock content %} {% endcomment %}
+
+
+
+
+
+
+
+
+
+

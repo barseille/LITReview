@@ -1,16 +1,17 @@
-<!-- review.html -->
 <div class="card mb-4">
 
     <div class="card-header text-success">
-        {# username fait référence à un champ du modèle User intégré dans Django #}
-        {# review fait référence à l'objet post de la boucle dans home.html #}
         <h3><strong>{{ review.user.username|capfirst }} a publié une critique</strong></h3>
     </div>
 
     <div class="card-body">
 
         <div class="d-flex justify-content-end small font-italic text-muted mb-2">
-            <p>{{ review.time_update|date:"H:i, d F Y" }}</p>
+            {% if review.time_update == review.time_created %}
+                <p>Créé le : {{ review.time_created|date:"H:i, d F Y"}}</p>
+            {% else %}
+                <p>Mis à jour le : {{ review.time_update|date:"H:i, d F Y"}}</p>
+            {% endif %}
         </div>
 
         <h4><strong>Titre :</strong> {{ review.headline }}</h4>
@@ -29,45 +30,5 @@
                 <img src="{{ review.ticket.image.url }}" class="img-fluid"> 
             </div>
         </div>
-
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %} <!-- review.html -->
-<div class="card mb-4">
-    <div class="card-header">
-        <h3><strong>{{ post.user.username|upper }} a publié une critique</strong></h3>
-    </div>
-    <div class="card-body">
-        <div class="d-flex justify-content-end small font-italic text-muted mb-2">
-            <p>{{ post.time_update|date:"H:i, d F Y" }}</p>
-        </div>
-        <h4><strong>Titre :</strong> {{ post.headline }}</h4>
-        <p><strong>Note :</strong> {{ post.rating }}/5</p>
-        <p><strong>Critique :</strong> {{ post.body }}</p>
-        {% if post.user == request.user %}
-        <p><a href="{% url 'edit_review' post.id %}" class="btn btn-info">Modifier la Critique</a></p>
-        {% endif %}
-        <div class="card mt-3">
-            <div class="card-body">
-                <p><strong>Auteur du ticket :</strong> {{ post.ticket.user.username|upper }}</p>
-                <p><strong>Titre du ticket :</strong> {{ post.ticket.title }}</p>
-                <img src="{{ post.ticket.image.url }}" class="img-fluid">
-            </div>
-        </div>
-    </div>
-</div> {% endcomment %}

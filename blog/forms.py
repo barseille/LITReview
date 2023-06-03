@@ -26,31 +26,42 @@ class SubscribeForm(forms.Form):
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,
     )   
- 
+
 
 class ReviewForm(forms.ModelForm):
-    rating = forms.ChoiceField(choices=[(i, i) for i in range(1, 6)], widget=forms.RadioSelect, label="Evalution")
-    
+    RATING_CHOICES = [
+        (1, '1 - Mauvais'),
+        (2, '2 - Faible'),
+        (3, '3 - Moyen'),
+        (4, '4 - Bien'),
+        (5, '5 - Excellent')
+    ]
+
+    rating = forms.ChoiceField(choices=RATING_CHOICES, widget=forms.RadioSelect, label="Évaluation")
+
     class Meta:
         model = models.Review
         fields = ['rating', 'headline', 'body']
         labels = {
-                'headline': 'Titre de la critique',
-                'body': 'Commentaire',
-                 }
+            'headline': 'Titre de la critique',
+            'body': 'Commentaire',
+        }
+
         
 class DeleteReviewForm(forms.Form):
     delete_review = forms.BooleanField(widget=forms.HiddenInput(), initial=True)
 
 
-
 class SearchUserForm(forms.Form):
     username = forms.CharField(
-        label='', 
-        error_messages={
-            'required': '', 
-        },
-        widget=forms.TextInput(attrs={'class': 'form-control', 
-                                      'style': 'width:50%',
+        
+        # cacher affichage "username"
+        label = '', 
+        
+        # cacher affichage "Ce champ est obligatoire"
+        error_messages={'required': ''},
+        
+        # form-control est une classe CSS fournie par Bootstrap
+        widget = forms.TextInput(attrs={'class': 'form-control', 
                                       'placeholder': 'Rechercher par nom'})
     )

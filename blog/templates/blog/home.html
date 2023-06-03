@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load templatetags %}
 
-{# home.html #}
-
 {% block content %}
 
 <h2 class="mb-4">Flux</h2>
@@ -12,27 +10,13 @@
     {% if post|classname == 'Ticket' %}
         {# ticket = variable utilisée dans ticket.html #}
         {% include 'blog/partials/ticket.html' with ticket=post %}
+
     {% elif post|classname == 'Review' %}
         {# review = variable utilisée dans review.html #}
         {% include 'blog/partials/review.html' with review=post %}
+        
     {% endif %}
 
 {% endfor %}
 
-{% comment %} {% for post in posts %}
-
-    {% if post|classname == 'Ticket' %}
-        {# Si le 'Ticket' a une 'Review' associée #}
-        {% if post.review_set.exists %}
-            {# retourne la première instance de Review associée à post, qui est un Ticket #}
-            {% include 'blog/partials/review.html' with review=post.review_set.first %}
-        {% else %}
-            {% include 'blog/partials/ticket.html' with ticket=post %}
-        {% endif %}
-
-    {% elif post|classname == 'Review' and post.ticket == null %}
-        {% include 'blog/partials/review.html' with review=post %}
-    {% endif %}
-
-{% endfor %} {% endcomment %}
 {% endblock content %}

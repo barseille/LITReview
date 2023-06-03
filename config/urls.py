@@ -25,7 +25,7 @@ urlpatterns = [
     path('create_review/<int:ticket_id>/', blog.views.create_review, name='create_review'),
     path('blog/<int:review_id>/edit_review/', blog.views.edit_review, name="edit_review"),
     path('blog/create_ticket_and_review/', CreateTicketAndReview.as_view(), name='create_ticket_and_review'),
-    # path('my_posts/', blog.views.my_posts, name="my_posts")
+    path('my_posts/', blog.views.my_posts, name="my_posts"),
 ]
 if settings.DEBUG:
     urlpatterns += static(

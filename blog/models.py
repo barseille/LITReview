@@ -11,6 +11,7 @@ class Ticket(models.Model):
     description = models.TextField(max_length=2048, blank=True)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+    time_update = models.DateTimeField(auto_now=True)
     
     
     IMAGE_MAX_SIZE = (400, 400)
@@ -28,12 +29,13 @@ class Ticket(models.Model):
         super().save(*args, **kwargs)
 
  
-   
 class UserFollows(models.Model):
+    
     # utilisateur qui suit un autre utilisateur (ex : user=jean)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              related_name='following')
+    
     # utilisateur qui est suivi par user (followed_user=bob, donc jean suit bob)
     followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                                       on_delete=models.CASCADE,
@@ -43,8 +45,7 @@ class UserFollows(models.Model):
         # un utilisateur ne peut suivre un autre utilisateur qu'une seule fois
         unique_together = ('user', 'followed_user')
      
-     
-# models.py       
+          
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0),

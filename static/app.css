@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap');
 
-
 .sidebar {
     width: 200px;
     height: 100%;
@@ -15,7 +14,6 @@
     margin-left: 500px;
     padding: 20px;
     width:60%;
-    /* margin:auto; */
 }
 .nav-link{
     color:#FFF
@@ -39,6 +37,3 @@
 .errorlist{
     list-style-type: none;
 }
-/* .search_bar{
-    width: 50%;
-} */

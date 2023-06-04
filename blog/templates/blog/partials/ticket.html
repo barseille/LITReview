@@ -3,15 +3,14 @@
     <h3 class="card-header text-primary"><strong>{{ ticket.user.username|capfirst }} a demandé une critique</strong></h3>
 
     <div class="card-body">
-        <div class="d-flex justify-content-end small font-italic text-muted mb-2">
-            {% if ticket.time_update == ticket.time_created %}
-                <p>Créé le : {{ ticket.time_created|date:"H:i, d F Y"}}</p>
-            {% else %}
-                <p>Mis à jour : {{ ticket.time_update|date:"H:i, d F Y"}}</p>
-            {% endif %}
+
+        <div class="d-flex justify-content-end small font-italic text-muted mb-2">  
+            <p>{{ ticket.time_created|date:"H:i, d F Y"}}</p>
         </div>
+
         <p><strong>Titre :</strong> {{ ticket.title }}</p>
         <p><strong>Description :</strong> {{ ticket.description }}</p>
+        
         {% if ticket.user == request.user %}
             <p><a href="{% url 'edit_ticket' ticket.id %}" class="btn btn-info">Modifier le Ticket</a></p>
         {% endif %}

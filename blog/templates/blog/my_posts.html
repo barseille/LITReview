@@ -18,51 +18,12 @@
         
     {% endif %}
 
+{% empty %}
+    <p>Vous n'avez pas encore de post.</p>
+
 {% endfor %}
 </div>
 {% endblock content%}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{% comment %} {% extends 'base.html' %}
-{% load templatetags %}
-
-{% block content %}
-
-<h2 class="mb-4">Mes Posts</h2>
-
-{% for post in posts %}
-
-    {% if post|classname == 'Ticket' %}
-        {# Affiche toujours le Ticket même s'il a une Review associée #}
-        {% include 'blog/partials/ticket.html' with ticket=post %}
-        {# Si le 'Ticket' a une 'Review' associée, affiche aussi la Review #}
-        {% if post.review_set.exists %}
-            {% include 'blog/partials/review.html' with review=post.review_set.first %}
-        {% endif %}
-    {% elif post|classname == 'Review' and post.ticket == null %}
-        {% include 'blog/partials/review.html' with review=post %}
-    {% endif %}
-
-{% endfor %}
-{% endblock content %} {% endcomment %}
-
-
 
 
 

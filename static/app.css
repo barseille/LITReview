@@ -26,3 +26,8 @@
 .form_small_title{
     margin-top: 2rem;
 }
+/* surcharge bootstrap */
+.nav-link:hover {
+    color: #000000 !important; 
+}
+

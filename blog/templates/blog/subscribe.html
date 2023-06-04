@@ -5,7 +5,7 @@
     <div>
         {# method="get" demandez une information(nom) sans rien changez dans la bdd #}
         {# action="" signifie que le formulaire sera soumis à la même URL que la page actuelle #}
-        <form method="get" action="">
+        <form method="get" action="{% url 'subscribe' %}">
             {{ search_form }}
             <button type="submit" class="btn btn-primary mt-4">Rechercher</button>
         </form>
@@ -20,7 +20,7 @@
                 {% for searched_user in searched_users %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ searched_user.username|capfirst }}
-                        <form method="post" action="{% url 'subscribe' user_id=searched_user.id %}">
+                        <form method="post" action="{% url 'subscribe' %}">
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ searched_user.id }}">
                             <button type="submit" class="btn btn-primary">S'abonner</button>
@@ -40,7 +40,7 @@
                 {% for follow in following %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ follow.followed_user.username|capfirst }}
-                        <form method="post" action="{% url 'unsubscribe' user_id=follow.followed_user.id %}">
+                        <form method="post" action="{% url 'unsubscribe' %}">
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ follow.followed_user.id }}">
                             <button type="submit" class="btn btn-danger">Désabonner</button>

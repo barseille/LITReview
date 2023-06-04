@@ -105,11 +105,11 @@ def edit_ticket(request, ticket_id):
 # ------------------------abonnement(subscribe)---------------------
 
 @login_required
-def subscribe(request, user_id):
+def subscribe(request):
     
    
     # 'user' correspond à l'objet User de l'utilisateur dont l'id est passé dans l'URL.
-    user = get_object_or_404(get_user_model(), id=user_id)
+    user = request.user
 
     # Liste des personnes que je suis
     following = request.user.following.all()
@@ -169,7 +169,10 @@ def subscribe(request, user_id):
 
 
 @login_required
-def unsubscribe(request, user_id):
+def unsubscribe(request):
+    
+    # récupération de l'ID de l'utilisateur à partir des données POST du formulaire
+    user_id = request.POST.get('user_id')
     
     # récupération de l'utilisateur qu'on souhaite se désabonner
     user_to_follow = get_object_or_404(get_user_model(), id=user_id)
@@ -181,7 +184,7 @@ def unsubscribe(request, user_id):
         follow_object.delete()  
     
     # retour vers ma page "subscribe"
-    return redirect("subscribe", user_id=request.user.id)
+    return redirect("subscribe")
 
 
 #---------------------------critique(review)----------------------------------

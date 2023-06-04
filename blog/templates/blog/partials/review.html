@@ -6,12 +6,8 @@
 
     <div class="card-body">
 
-        <div class="d-flex justify-content-end small font-italic text-muted mb-2">
-            {% if review.time_update == review.time_created %}
-                <p>Créé le : {{ review.time_created|date:"H:i, d F Y"}}</p>
-            {% else %}
-                <p>Mis à jour : {{ review.time_update|date:"H:i, d F Y"}}</p>
-            {% endif %}
+        <div class="d-flex justify-content-end small font-italic text-muted mb-2"> 
+            <p>{{ review.time_created|date:"H:i, d F Y"}}</p>
         </div>
 
         <h4><strong>Titre :</strong> {{ review.headline }}</h4>

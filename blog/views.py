@@ -27,30 +27,32 @@ def home(request):
     - liste unifier de tickets et de critiques triée par date du plus récent
     """
     posts = sorted(
-        chain(tickets, reviews), 
-        key=lambda post: post.time_created, 
+        chain(tickets, reviews),
+        key=lambda post: post.time_created,
         reverse=True
     )
 
     return render(request, 'blog/home.html', context={'posts': posts})
 
 
-#------------------------------ticket---------------------------------
+# ------------------------------ticket-----------------------------
 
 """
-- LoginRequiredMixin : mixin qui s'assure que l'utilisateur est connecté 
+- LoginRequiredMixin : mixin qui s'assure que l'utilisateur est connecté
 avant de permettre l'accès à la vue.
 
 - CreateView : créez une instance d'un modèle à partir d'un formulaire.
 """
+
+
 class TicketCreateView(LoginRequiredMixin, CreateView):
     model = models.Ticket
     form_class = forms.TicketForm
     template_name = 'blog/create_ticket.html'
     success_url = reverse_lazy('home')
 
-    """ 
-    Avant de sauvegarder l'instance de Ticket qui est sur le point d'être créée, 
+    """
+    Avant de sauvegarder l'instance de Ticket qui est sur le point d'être créée,
     on assigne l'utilisateur actuellement connecté à son attribut user.
     C'est pour cette raison qu'on surcharge la méthode form_valid.
     """
@@ -61,10 +63,9 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
 
 @login_required
 def edit_ticket(request, ticket_id):
-    
     # récupération de l'instance du ticket par son id
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    
+ 
     """
     Vérifiez si l'utilisateur connecté est celui qui a créé le ticket
     si utilisateur différent alors erreur 403 (interdiction)
@@ -81,10 +82,10 @@ def edit_ticket(request, ticket_id):
         
         if 'edit_ticket' in request.POST:
             """
-            Si le formulaire de modification est soumis, 
+            Si le formulaire de modification est soumis,
             il est re-créé avec les nouvelles données entrées par l'utilisateur
             """
-            edit_ticket = forms.TicketForm(request.POST,request.FILES, instance=ticket)
+            edit_ticket = forms.TicketForm(request.POST, request.FILES, instance=ticket)
             if edit_ticket.is_valid():
                 edit_ticket.save()
                 return redirect('home')
@@ -104,10 +105,10 @@ def edit_ticket(request, ticket_id):
 
 # ------------------------abonnement(subscribe)---------------------
 
+
 @login_required
 def subscribe(request):
-    
-   
+     
     # 'user' correspond à l'objet User de l'utilisateur dont l'id est passé dans l'URL.
     user = request.user
 
@@ -150,7 +151,7 @@ def subscribe(request):
 
     context = {
         
-        "user":user,
+        "user": user,
         
         # liste de tous les utilisateurs que l'utilisateur actuel suit déjà
         "following": following,
@@ -162,7 +163,7 @@ def subscribe(request):
         "search_form": search_form,
         
         # liste de tous les utilisateurs qui correspondent a la recherche de l'utilisateur actuel
-        "searched_users": searched_users 
+        "searched_users": searched_users
     }
 
     return render(request, "blog/subscribe.html", context=context)
@@ -181,18 +182,18 @@ def unsubscribe(request):
     follow_object = models.UserFollows.objects.filter(user=request.user, followed_user=user_to_follow)
     
     if follow_object.exists():
-        follow_object.delete()  
+        follow_object.delete()
     
     # retour vers ma page "subscribe"
     return redirect("subscribe")
 
 
-#---------------------------critique(review)----------------------------------
+# -----------------------critique(review)--------------------------
 
 @login_required
 def create_review(request, ticket_id):
     
-    # récupération du ticket à partir de la base de données en utilisant l'id fourni.
+    # récupération du ticket à partir de la bdd en utilisant l'id fourni.
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     
     form = forms.ReviewForm()
@@ -210,7 +211,7 @@ def create_review(request, ticket_id):
     else:
         # formulaire vierge
         form = forms.ReviewForm()
-    return render(request, "blog/create_review.html", context={"form":form})
+    return render(request, "blog/create_review.html", context={"form": form})
 
 
 @login_required
@@ -229,7 +230,7 @@ def edit_review(request, review_id):
             edit_review = forms.ReviewForm(request.POST, instance=review)
             
             """
-            si formulaire valide, les modifications sont enregistrées 
+            si formulaire valide, les modifications sont enregistrées
             alors l'utilisateur sera redirigé vers le flux
             """
             if edit_review.is_valid():
@@ -249,14 +250,14 @@ def edit_review(request, review_id):
     return render(request, "blog/edit_review.html", context=context)
 
 
-# ----------------------ticket avec critique-------------------------------------------
+# ----------------------ticket avec critique------------------
 
 class CreateTicketAndReview(LoginRequiredMixin, View):
     template_name = 'blog/create_ticket_and_review.html'
 
     def get(self, request):
-        form_ticket = forms.TicketForm() 
-        form_review = forms.ReviewForm() 
+        form_ticket = forms.TicketForm()
+        form_review = forms.ReviewForm()
         context = {
             "form_ticket": form_ticket,
             "form_review": form_review,
@@ -264,8 +265,8 @@ class CreateTicketAndReview(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
 
     def post(self, request):
-        form_ticket = forms.TicketForm(request.POST, request.FILES) 
-        form_review = forms.ReviewForm(request.POST) 
+        form_ticket = forms.TicketForm(request.POST, request.FILES)
+        form_review = forms.ReviewForm(request.POST)
         
         if form_ticket.is_valid() and form_review.is_valid():
             
@@ -288,11 +289,12 @@ class CreateTicketAndReview(LoginRequiredMixin, View):
                 "form_ticket": form_ticket,
                 "form_review": form_review,
             }
-            return redirect('home') 
+            return redirect('home')
         
         return render(request, self.template_name, context=context)
     
-# ----------------------------------mes posts----------------------------------------------------
+# -------------------mes posts---------------------
+
 
 @login_required
 def my_posts(request):
@@ -301,7 +303,7 @@ def my_posts(request):
     tickets = models.Ticket.objects.filter(user=request.user).annotate(review_count=Count('review'))
     reviews = models.Review.objects.filter(user=request.user)
 
-    # liste unifier des tickets et des critiques triées par date en ordre décroissant
+    # liste tickets et des critiques triées par date en ordre décroissant
     posts = sorted(
         chain(tickets, reviews),
         key=lambda post: post.time_created,

@@ -1,4 +1,3 @@
-# forms.py
 from django import forms
 from . import models
 from django.contrib.auth import get_user_model
@@ -9,13 +8,14 @@ class TicketForm(forms.ModelForm):
     
     class Meta:
         model = models.Ticket
-        fields = ['title', 'description', 'image'] 
-        labels = {"title" : "Titre du ticket"}
+        fields = ['title', 'description', 'image']
+        labels = {"title": "Titre du ticket"}
  
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # forms.FileInput() : champ de saisi de fichier
-        self.fields['image'].widget = forms.FileInput() 
+        self.fields['image'].widget = forms.FileInput()
+    
             
 class DeleteTicketForm(forms.Form):
     delete_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
@@ -25,7 +25,7 @@ class SubscribeForm(forms.Form):
     user = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
         widget=forms.CheckboxSelectMultiple,
-    )   
+    )
 
 
 class ReviewForm(forms.ModelForm):
@@ -56,12 +56,12 @@ class SearchUserForm(forms.Form):
     username = forms.CharField(
         
         # cacher affichage "username"
-        label = '', 
+        label='',
         
         # cacher affichage "Ce champ est obligatoire"
         error_messages={'required': ''},
         
         # form-control est une classe CSS fournie par Bootstrap
-        widget = forms.TextInput(attrs={'class': 'form-control', 
+        widget=forms.TextInput(attrs={'class': 'form-control',
                                       'placeholder': 'Rechercher par nom'})
     )

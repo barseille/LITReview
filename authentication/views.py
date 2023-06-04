@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth import login, authenticate
 from django.conf import settings
 from django.views.generic import View
 from . import forms
@@ -43,7 +42,7 @@ class SignupPageView(View):
             user = form.save()
             login(request, user)
             return redirect(settings.LOGIN_REDIRECT_URL)
-        return render(request, self.template_name, {'form': form}) 
+        return render(request, self.template_name, {'form': form})
 
 
 def logout_user(request):

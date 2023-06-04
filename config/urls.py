@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.urls import path
 import authentication.views
@@ -10,11 +9,9 @@ from blog.views import TicketCreateView
 from blog.views import CreateTicketAndReview
 
 urlpatterns = [
-    path('admin/', admin.site.urls),#
-    path('', LoginView.as_view(
-            template_name='authentication/login.html',
-            redirect_authenticated_user=True),
-            name='login'),
+    path('admin/', admin.site.urls),
+    path('', LoginView.as_view(template_name='authentication/login.html',
+                               redirect_authenticated_user=True), name='login'),
     path('logout/', authentication.views.logout_user, name='logout'),
     path('home/', blog.views.home, name='home'),
     path('signup/', authentication.views.SignupPageView.as_view(), name='signup'),
@@ -30,4 +27,3 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

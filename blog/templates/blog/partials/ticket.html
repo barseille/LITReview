@@ -7,7 +7,7 @@
             {% if ticket.time_update == ticket.time_created %}
                 <p>Créé le : {{ ticket.time_created|date:"H:i, d F Y"}}</p>
             {% else %}
-                <p>Mis à jour le : {{ ticket.time_update|date:"H:i, d F Y"}}</p>
+                <p>Mis à jour : {{ ticket.time_update|date:"H:i, d F Y"}}</p>
             {% endif %}
         </div>
         <p><strong>Titre :</strong> {{ ticket.title }}</p>

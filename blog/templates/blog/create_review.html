@@ -2,10 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Ajouter une critique : </h2>
+    <div class="form_block">
+    <h2 class="form_title">Ajouter une critique : </h2>
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Envoyer</button>
     </form>
+</div>
 {% endblock content %}

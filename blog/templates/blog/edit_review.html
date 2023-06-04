@@ -2,17 +2,19 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h2>Modifier la critique</h2>
+<div class="form_block">
+    <h2 class="form_title">Modifier la critique</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ edit_review|crispy }}
         <button type="submit" class="btn btn-primary" name="edit_review">Sauvegarder</button>
     </form>
    
-    <h3>Supprimer la critique ?</h3>
+    <h3 class="form_small_title">Supprimer la critique ?</h3>
     <form method="post">
         {% csrf_token %}
         {{ delete_review|crispy }}
         <button type="submit" class="btn btn-danger" >Supprimer</button>
     </form>
+</div>
 {% endblock content %}

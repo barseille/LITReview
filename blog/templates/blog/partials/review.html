@@ -10,7 +10,7 @@
             {% if review.time_update == review.time_created %}
                 <p>Créé le : {{ review.time_created|date:"H:i, d F Y"}}</p>
             {% else %}
-                <p>Mis à jour le : {{ review.time_update|date:"H:i, d F Y"}}</p>
+                <p>Mis à jour : {{ review.time_update|date:"H:i, d F Y"}}</p>
             {% endif %}
         </div>
 

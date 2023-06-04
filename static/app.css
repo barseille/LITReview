@@ -1,31 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700&display=swap');
 
-.sidebar {
-    width: 200px;
-    height: 100%;
-    position: fixed;
-    background-color: #007BFF; 
-    padding: 20px;
-    color: #FFF; 
-    padding: 10px;
-}
-
-.main-content {
-    margin-left: 500px;
-    padding: 20px;
-    width:60%;
-}
-.nav-link{
-    color:#FFF
-}
-.nav-link:hover {
-    color: #01325a;
-}
-
 .ticket_button{
     margin-top: 20px;
 }
-
 .content-header {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -36,4 +13,16 @@
 }
 .errorlist{
     list-style-type: none;
+}
+.home_block{
+    padding : 5rem 20rem;
+}
+.form_block{
+    padding : 3rem 20rem;
+}
+.form_title{
+    margin-bottom: 2rem;
+}
+.form_small_title{
+    margin-top: 2rem;
 }

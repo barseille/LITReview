@@ -1,37 +1,32 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
-
-{% block content %}
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %}
 
 <div class="form_block">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4>Se connecter</h4>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <button type="submit" class="btn btn-primary">Se connecter</button>
-                    </form>
-                </div>
-            </div>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h4>Se connecter</h4>
         </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4>S'inscrire</h4>
-                </div>
-                <div class="card-body">
-                    <p>Vous n'avez pas de compte ? Inscrivez-vous maintenant !</p>
-                    <a href="{% url 'signup' %}" class="btn btn-success">S'inscrire</a>
-                </div>
-            </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %} {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Se connecter</button>
+          </form>
         </div>
+      </div>
     </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h4>S'inscrire</h4>
+        </div>
+        <div class="card-body">
+          <p>Vous n'avez pas de compte ? Inscrivez-vous maintenant !</p>
+          <a href="{% url 'signup' %}" class="btn btn-success">S'inscrire</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
-

@@ -18,14 +18,20 @@ from . import forms
 @login_required
 def home(request):
 
-    # récupération de tous les tickets
-    tickets = models.Ticket.objects.all().annotate(review_count=Count('review'))
-    reviews = models.Review.objects.all()
+    # récupération des ids des utilisateurs que je suis abonné
+    following_users = request.user.following.values_list('followed_user', flat=True)
 
-    """
-    - lambda est un mot-clé en Python qui vous permet de déclarer des fonctions anonymes
-    - liste unifier de tickets et de critiques triée par date du plus récent
-    """
+    # Convertir QuerySet en liste
+    following_users = list(following_users)
+
+    # Ajouter mon id à la liste
+    following_users.append(request.user.id)
+
+    # récupération de tous les tickets et reviews de moi-même et des utilisateurs que je suis
+    tickets = models.Ticket.objects.filter(user_id__in=following_users).annotate(review_count=Count('review'))
+    reviews = models.Review.objects.filter(user_id__in=following_users)
+
+    # liste unifier de tickets et de critiques triée par date décroissant
     posts = sorted(
         chain(tickets, reviews),
         key=lambda post: post.time_created,
@@ -35,67 +41,59 @@ def home(request):
     return render(request, 'blog/home.html', context={'posts': posts})
 
 
-# ------------------------------ticket-----------------------------
-
-"""
-- LoginRequiredMixin : mixin qui s'assure que l'utilisateur est connecté
-avant de permettre l'accès à la vue.
-
-- CreateView : créez une instance d'un modèle à partir d'un formulaire.
-"""
-
-
 class TicketCreateView(LoginRequiredMixin, CreateView):
+    """
+    LoginRequiredMixin : mixin qui s'assure que l'utilisateur est connecté
+    avant de permettre l'accès à la vue.
+
+    CreateView : créez une instance d'un modèle à partir d'un formulaire.
+    """
+
     model = models.Ticket
     form_class = forms.TicketForm
     template_name = 'blog/create_ticket.html'
     success_url = reverse_lazy('home')
 
-    """
-    Avant de sauvegarder l'instance de Ticket qui est sur le point d'être créée,
-    on assigne l'utilisateur actuellement connecté à son attribut user.
-    C'est pour cette raison qu'on surcharge la méthode form_valid.
-    """
     def form_valid(self, form):
+        """
+        Avant de sauvegarder l'instance de Ticket qui est sur le point d'être créée,
+        on assigne l'utilisateur actuellement connecté à son attribut user.
+        C'est pour cette raison qu'on surcharge la méthode form_valid.
+        """
         form.instance.user = self.request.user
         return super().form_valid(form)
 
 
 @login_required
 def edit_ticket(request, ticket_id):
+
     # récupération de l'instance du ticket par son id
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
- 
-    """
-    Vérifiez si l'utilisateur connecté est celui qui a créé le ticket
-    si utilisateur différent alors erreur 403 (interdiction)
-    """
+
+    # utilisateur connecté est celui qui a créé le ticket si utilisateur différent alors erreur 403 (interdiction)
     if ticket.user != request.user:
         raise PermissionDenied
-    
+
     # Création d'un formulaire de modification prérempli avec les données du ticket existant
     edit_ticket = forms.TicketForm(instance=ticket)
-    
+
     delete_ticket = forms.DeleteTicketForm()
-    
+
     if request.method == 'POST':
-        
+
         if 'edit_ticket' in request.POST:
-            """
-            Si le formulaire de modification est soumis,
-            il est re-créé avec les nouvelles données entrées par l'utilisateur
-            """
             edit_ticket = forms.TicketForm(request.POST, request.FILES, instance=ticket)
+
             if edit_ticket.is_valid():
                 edit_ticket.save()
                 return redirect('home')
-            
+
         if 'delete_ticket' in request.POST:
             delete_ticket = forms.DeleteTicketForm(request.POST)
             if delete_ticket.is_valid():
                 ticket.delete()
                 return redirect('home')
-        
+
     # formulaires sont passés au template pour être affichés
     context = {
         'edit_ticket': edit_ticket,
@@ -103,18 +101,16 @@ def edit_ticket(request, ticket_id):
     }
     return render(request, 'blog/edit_ticket.html', context=context)
 
-# ------------------------abonnement(subscribe)---------------------
-
 
 @login_required
 def subscribe(request):
-     
+
     # 'user' correspond à l'objet User de l'utilisateur dont l'id est passé dans l'URL.
     user = request.user
 
     # Liste des personnes que je suis
     following = request.user.following.all()
-    
+
     #  Liste des personnes qui me suivent
     followers = request.user.followers.all()
 
@@ -129,10 +125,10 @@ def subscribe(request):
     searched_users = None
 
     if search_form.is_valid():
-        
+
         # extraire la valeur du champ username soumis par le formulaire
         searched_username = search_form.cleaned_data["username"]
-        
+
         # Créer une nouvelle liste d'utilisateurs qui correspondent à la recherche
         searched_users = all_users.filter(username__icontains=searched_username)
 
@@ -143,25 +139,25 @@ def subscribe(request):
                 raise ValidationError("Vous ne pouvez pas vous abonner à vous-même.")
             if user_to_follow.id in followed_users_ids:
                 raise ValidationError("Vous êtes déjà abonné à cet utilisateur.")
-            
+
             models.UserFollows.objects.create(user=request.user, followed_user=user_to_follow)
-            
+
         except ValidationError as error:
             messages.error(request, error.message)
 
     context = {
-        
+
         "user": user,
-        
+
         # liste de tous les utilisateurs que l'utilisateur actuel suit déjà
         "following": following,
-        
+
         # liste de tous les utilisateurs qui suivent l'utilisateur actuel
         "followers": followers,
-        
+
         # formulaire de recherche qui permet à l'utilisateur de chercher d'autres utilisateurs par nom
         "search_form": search_form,
-        
+
         # liste de tous les utilisateurs qui correspondent a la recherche de l'utilisateur actuel
         "searched_users": searched_users
     }
@@ -171,19 +167,19 @@ def subscribe(request):
 
 @login_required
 def unsubscribe(request):
-    
+
     # récupération de l'ID de l'utilisateur à partir des données POST du formulaire
     user_id = request.POST.get('user_id')
-    
+
     # récupération de l'utilisateur qu'on souhaite se désabonner
     user_to_follow = get_object_or_404(get_user_model(), id=user_id)
-    
+
     # relation entre moi et l'utilisateur que je souhaite me déabonner
     follow_object = models.UserFollows.objects.filter(user=request.user, followed_user=user_to_follow)
-    
+
     if follow_object.exists():
         follow_object.delete()
-    
+
     # retour vers ma page "subscribe"
     return redirect("subscribe")
 
@@ -192,15 +188,15 @@ def unsubscribe(request):
 
 @login_required
 def create_review(request, ticket_id):
-    
+
     # récupération du ticket à partir de la bdd en utilisant l'id fourni.
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    
+
     form = forms.ReviewForm()
 
     if request.method == "POST":
         form = forms.ReviewForm(request.POST)
-        
+
         # si tous les champs requis sont présents
         if form.is_valid():
             review = form.save(commit=False)
@@ -216,41 +212,35 @@ def create_review(request, ticket_id):
 
 @login_required
 def edit_review(request, review_id):
-    
+
     # récupération de l'objet Review avec "id" depuis la bdd
     review = get_object_or_404(models.Review, id=review_id)
-    
+
     # récupération de l'instance du formulaire de critique avec les données
     edit_review = forms.ReviewForm(instance=review)
-    
+
     delete_review = forms.DeleteReviewForm()
-    
+
     if request.method == "POST":
         if "edit_review" in request.POST:
             edit_review = forms.ReviewForm(request.POST, instance=review)
-            
-            """
-            si formulaire valide, les modifications sont enregistrées
-            alors l'utilisateur sera redirigé vers le flux
-            """
+
             if edit_review.is_valid():
                 edit_review.save()
                 return redirect("home")
-    
+
         if "delete_review" in request.POST:
             delete_review = forms.DeleteReviewForm(request.POST)
             if delete_review.is_valid():
                 review.delete()
                 return redirect("home")
-        
+
     context = {
         "edit_review": edit_review,
         "delete_review": delete_review,
     }
     return render(request, "blog/edit_review.html", context=context)
 
-
-# ----------------------ticket avec critique------------------
 
 class CreateTicketAndReview(LoginRequiredMixin, View):
     template_name = 'blog/create_ticket_and_review.html'
@@ -267,21 +257,21 @@ class CreateTicketAndReview(LoginRequiredMixin, View):
     def post(self, request):
         form_ticket = forms.TicketForm(request.POST, request.FILES)
         form_review = forms.ReviewForm(request.POST)
-        
+
         if form_ticket.is_valid() and form_review.is_valid():
-            
+
             # On enregistre le ticket sans le sauvegarder
             ticket = form_ticket.save(commit=False)
-            
+
             # On ajoute l'utilisateur connecté comme auteur du ticket
             ticket.user = self.request.user
-            
+
             # On sauvegarde maintenant le ticket dans la base de données
             ticket.save()
 
             review = form_review.save(commit=False)
             review.user = self.request.user
-            
+
             # critique liée au ticket
             review.ticket = ticket
             review.save()
@@ -290,15 +280,13 @@ class CreateTicketAndReview(LoginRequiredMixin, View):
                 "form_review": form_review,
             }
             return redirect('home')
-        
+
         return render(request, self.template_name, context=context)
-    
-# -------------------mes posts---------------------
 
 
 @login_required
 def my_posts(request):
-    
+
     # Récupérer les Tickets et les Reviews de l'utilisateur connecté
     tickets = models.Ticket.objects.filter(user=request.user).annotate(review_count=Count('review'))
     reviews = models.Review.objects.filter(user=request.user)

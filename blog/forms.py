@@ -5,22 +5,22 @@ from django.contrib.auth import get_user_model
 
 class TicketForm(forms.ModelForm):
     edit_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
-    
+
     class Meta:
         model = models.Ticket
         fields = ['title', 'description', 'image']
         labels = {"title": "Titre du ticket"}
- 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # forms.FileInput() : champ de saisi de fichier
         self.fields['image'].widget = forms.FileInput()
-    
-            
+
+
 class DeleteTicketForm(forms.Form):
     delete_ticket = forms.BooleanField(widget=forms.HiddenInput, initial=True)
-    
-    
+
+
 class SubscribeForm(forms.Form):
     user = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
@@ -47,20 +47,20 @@ class ReviewForm(forms.ModelForm):
             'body': 'Commentaire',
         }
 
-        
+
 class DeleteReviewForm(forms.Form):
     delete_review = forms.BooleanField(widget=forms.HiddenInput(), initial=True)
 
 
 class SearchUserForm(forms.Form):
     username = forms.CharField(
-        
+
         # cacher affichage "username"
         label='',
-        
+
         # cacher affichage "Ce champ est obligatoire"
         error_messages={'required': ''},
-        
+
         # form-control est une classe CSS fournie par Bootstrap
         widget=forms.TextInput(attrs={'class': 'form-control',
                                       'placeholder': 'Rechercher par nom'})

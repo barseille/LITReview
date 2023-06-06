@@ -9,6 +9,12 @@ LITReview est une application web destinée à deux principaux groupes d'utilisa
 
 ## Installation
 
+### Cloner le projet : 
+
+```
+git clone https://github.com/barseille/LITReview.git
+```
+
 ### Créer un environnement virtuel : 
 
 ```
@@ -40,12 +46,23 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+## Sur votre navigateur, entrer l'adresse suivant pour accéder au site : 
+
+```
+http://127.0.0.1:8000/
+```
 
 ## Test de l'application
 
-Vous pouvez vous connecter pour un test de l'application en utilisant les informations de connexion suivantes :
+Vous pouvez vous connecter pour un test de l'application à l'aide de 3 utilisateurs au choix :
+
+Nom d'utilisateur : barseille / Mot de passe : barseille
+Nom d'utilisateur : tyson / Mot de passe : Jayden1234
+Nom d'utilisateur : jayden / Mot de passe : Jayden1234
+
+
+## Générer rapport Flake8
 
 ```
-username : barseille
-password : barseille
+flake8 --format=html --htmldir=flake8_rapport
 ```

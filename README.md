@@ -21,21 +21,38 @@ git clone https://github.com/barseille/LITReview.git
 python -m venv env
 ```
 
-### Activer l'environnement virtuel avec Powershell :
+### Activer l'environnement virtuel :
+
+Pour Windows avec Powershell :
 
 ```
 env/Scripts/Activate.ps1
 ```
 
-### Installer les paquets Python répertoriés dans le fichier requirements.txt :
+Pour macOS ou Linux avec Bash :
+
+```
+source env/bin/activate
+
+```
+
+### Mise à jour "pip" si besoin à l'aide cette commande :
+
+```
+python -m pip install --upgrade pip
+```
+
+### Installer les paquets Python requis:
+
+Avec l'environnement virtuel activé, installez les dépendances requises :
 
 ```
 pip install -r requirements.txt
 ```
 
-*Cette commande installera tous les packages nécessaires à l'application. Aucune installation manuelle n'est nécessaire.
-
 ### Configuration de la base de données
+
+Exécutez les migrations de la base de données avec :
 
 ```
 python manage.py migrate
@@ -46,7 +63,10 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
-## Sur votre navigateur, entrer l'adresse suivant pour accéder au site : 
+
+## Accéder à l'application : 
+
+Dans votre navigateur web, accédez à l'application à l'adresse suivante :
 
 ```
 http://127.0.0.1:8000/
@@ -54,12 +74,13 @@ http://127.0.0.1:8000/
 
 ## Test de l'application
 
-Vous pouvez vous connecter pour un test de l'application à l'aide de 3 utilisateurs au choix :
+Pour tester l'application, vous pouvez vous connecter avec l'un des comptes de test suivants :
 
-Nom d'utilisateur : barseille / Mot de passe : barseille
-Nom d'utilisateur : tyson / Mot de passe : Jayden1234
-Nom d'utilisateur : jayden / Mot de passe : Jayden1234
+- Nom d'utilisateur : barseille / Mot de passe : barseille
 
+- Nom d'utilisateur : tyson / Mot de passe : Jayden1234
+
+- Nom d'utilisateur : jayden / Mot de passe : Jayden1234
 
 ## Générer rapport Flake8
 

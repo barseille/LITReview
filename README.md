@@ -9,10 +9,10 @@ LITReview est une application web destinée à deux principaux groupes d'utilisa
 
 ## Installation
 
-### Cloner le projet : 
+### Cloner le projet depuis votre éditeur de code: 
 
 ```
-git clone https://github.com/barseille/LITReview.git
+https://github.com/barseille/LITReview.git
 ```
 
 ### Créer un environnement virtuel : 

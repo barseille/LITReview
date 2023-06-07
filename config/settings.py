@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'crispy_forms'
 ]
 
+# Utilisation de bootstrap4 dans les formulaires.
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
@@ -98,6 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
         }
     },
     {
+        # Vérifie que le mot de passe contient une lettre.
         'NAME': 'authentication.validators.ContainsLetterValidator',
     },
 ]
@@ -119,7 +121,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# # URL à utiliser lors de la référence à des fichiers statiques
 STATIC_URL = "static/"
+
+# Répertoires où Django doit rechercher des fichiers statiques
 STATICFILES_DIRS = [BASE_DIR.joinpath('static/')]
 
 # Default primary key field type
@@ -127,10 +132,13 @@ STATICFILES_DIRS = [BASE_DIR.joinpath('static/')]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Modèle à utiliser pour les utilisateurs
 AUTH_USER_MODEL = 'authentication.User'
 
+# URL à utiliser pour la vue de connexion
 LOGIN_URL = 'login'
 
+# URL à laquelle rediriger après une connexion réussie
 LOGIN_REDIRECT_URL = 'home'
 
 # url de médias téléversés par les utilisateurs

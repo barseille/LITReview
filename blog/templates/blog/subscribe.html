@@ -69,21 +69,25 @@
 {% endblock content %}
 
 
-        {% comment %} <h2 class="content-header">S'abonner à d'autres utilisateurs</h2>
-        <div>
-            <h3 class="content-subheader content-header">Liste des utilisateurs :</h3>
-            <ul class="list-group">
-                {% for other_user in all_users %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ other_user.username|upper }}
-                        <form method="post" action="{% url 'subscribe' user_id=other_user.id %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="user_id" value="{{ other_user.id }}">
-                            <button type="submit" class="btn btn-primary">S'abonner</button>
-                        </form>
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">Il n'y a plus d'autres utilisateurs à suivre.</li>
-                {% endfor %}
-            </ul>
-        </div> {% endcomment %}
+
+
+
+
+{% comment %} <h2 class="content-header">S'abonner à d'autres utilisateurs</h2>
+<div>
+    <h3 class="content-subheader content-header">Liste des utilisateurs :</h3>
+    <ul class="list-group">
+        {% for other_user in all_users %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ other_user.username|upper }}
+                <form method="post" action="{% url 'subscribe' user_id=other_user.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ other_user.id }}">
+                    <button type="submit" class="btn btn-primary">S'abonner</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">Il n'y a plus d'autres utilisateurs à suivre.</li>
+        {% endfor %}
+    </ul>
+</div> {% endcomment %}

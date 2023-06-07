@@ -14,7 +14,9 @@
         {% if ticket.user == request.user %}
             <p><a href="{% url 'edit_ticket' ticket.id %}" class="btn btn-info">Modifier le Ticket</a></p>
         {% endif %}
-        <img src="{{ ticket.image.url }}" class="img-fluid"></br>
+        {% if ticket.image %}
+            <img src="{{ ticket.image.url }}" class="img-fluid"></br>
+        {% endif %}
         
         {% if ticket.review_count == 0 %}
             <a href="{% url 'create_review' ticket_id=ticket.id %}" class="btn btn-primary ticket_button">Créer une critique</a>

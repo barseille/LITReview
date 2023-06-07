@@ -184,8 +184,6 @@ def unsubscribe(request):
     return redirect("subscribe")
 
 
-# -----------------------critique(review)--------------------------
-
 @login_required
 def create_review(request, ticket_id):
 

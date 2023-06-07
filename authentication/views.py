@@ -6,15 +6,25 @@ from . import forms
 
 
 class LoginPageView(View):
+    """
+    Classe pour la page de connexion.
+    """
+
     template_name = 'authentication/login.html'
     form_class = forms.LoginForm
 
     def get(self, request):
+        """
+        Méthode pour gérer les requêtes GET. Elle initialise un formulaire de connexion vide.
+        """
         form = self.form_class()
         message = ''
         return render(request, self.template_name, context={'form': form, 'message': message})
 
     def post(self, request):
+        """
+        Méthode pour gérer les requêtes POST. Elle vérifie l'authenticité des données du formulaire de connexion.
+        """
         form = self.form_class(request.POST)
 
         # si le formulaire respecte les champs requis du model
@@ -35,14 +45,23 @@ class LoginPageView(View):
 
 
 class SignupPageView(View):
+    """
+    Classe pour la page d'inscription.
+    """
     form_class = forms.SignupForm
     template_name = 'authentication/signup.html'
 
     def get(self, request):
+        """
+        Méthode pour gérer les requêtes GET. Elle initialise un formulaire d'inscription vide.
+        """
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+        """
+        Méthode pour gérer les requêtes POST. Elle vérifie l'authenticité des données du formulaire d'inscription.
+        """
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save()
@@ -52,5 +71,8 @@ class SignupPageView(View):
 
 
 def logout_user(request):
+    """
+    Fonction pour déconnecter l'utilisateur actuel. Redirige l'utilisateur vers la page de connexion.
+    """
     logout(request)
     return redirect('login')

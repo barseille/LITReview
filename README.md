@@ -35,7 +35,6 @@ Pour macOS ou Linux avec Bash :
 source env/bin/activate
 
 ```
-
 ### Mise à jour "pip" si besoin à l'aide cette commande :
 
 ```

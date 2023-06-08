@@ -9,7 +9,6 @@ class LoginPageView(View):
     """
     Classe pour la page de connexion.
     """
-
     template_name = 'authentication/login.html'
     form_class = forms.LoginForm
 
@@ -75,4 +74,4 @@ def logout_user(request):
     Fonction pour déconnecter l'utilisateur actuel. Redirige l'utilisateur vers la page de connexion.
     """
     logout(request)
-    return redirect('login')
+    return redirect(settings.LOGIN_URL)

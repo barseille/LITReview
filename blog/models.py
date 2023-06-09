@@ -21,7 +21,7 @@ class Ticket(models.Model):
         Surcharge la méthode save pour inclure le redimensionnement de l'image.
 
         La méthode fait les opérations suivantes :
-        1. Sauvegarde l'objet Ticket dans la bdd avec l'image éventuellement ajoutée.
+        1. Sauvegarde l'objet Ticket dans la bdd avec l'image ajoutée.
         2. Rafraîchit l'objet depuis la bdd pour tenir compte des éventuelles modifications de l'image par le système.
         3. Redimensionne l'image si elle dépasse une taille maximale spécifiée.
         4. Sauvegarde à nouveau l'objet avec l'image redimensionnée.
@@ -44,12 +44,12 @@ class UserFollows(models.Model):
     La classe UserFollows représente la relation de suivi entre les utilisateurs.
     """
 
-    # Utilisateur qui suit un autre utilisateur (ex : user=jean)
+    # C'est l'utilisateur qui suit d'autres utilisateurs.
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              related_name='following')
 
-    # Utilisateur qui est suivi par user (followed_user=bob, donc jean suit bob)
+    # C'est l'utilisateur qui est suivi par d'autres utilisateurs.
     followed_user = models.ForeignKey(to=settings.AUTH_USER_MODEL,
                                       on_delete=models.CASCADE,
                                       related_name='followers')

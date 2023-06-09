@@ -18,26 +18,27 @@ from . import forms
 @login_required
 def home(request):
 
-    # récupération des ids des utilisateurs que je suis abonné
-    following_users = request.user.following.values_list('followed_user', flat=True)
+    # obtenir les informations sur qui l'utilisateur actuel suit.
+    user_follows = request.user.following
 
-    # Convertir QuerySet en liste
-    following_users = list(following_users)
+    # Pour chaque relation de suivi, obtenir l'ID de l'utilisateur suivi
+    following_users_ids = list(user_follows.values_list('followed_user', flat=True))
 
-    # Ajouter mon id à la liste
-    following_users.append(request.user.id)
+    # Ajouter l'ID de l'utilisateur courant à la liste des IDs
+    following_users_ids.append(request.user.id)
 
-    # récupération de tous les tickets et reviews de moi-même et des utilisateurs que je suis
-    tickets = models.Ticket.objects.filter(user_id__in=following_users).annotate(review_count=Count('review'))
-    reviews = models.Review.objects.filter(user_id__in=following_users)
+    # Récupérer tous les tickets et critiques des utilisateurs suivis et de l'utilisateur courant.
+    tickets = models.Ticket.objects.filter(user_id__in=following_users_ids).annotate(review_count=Count('review'))
+    reviews = models.Review.objects.filter(user_id__in=following_users_ids)
 
-    # liste unifier de tickets et de critiques triée par date décroissant
+    # Fusionner les listes de tickets et de critiques, triées par date de création décroissante.
     posts = sorted(
         chain(tickets, reviews),
         key=lambda post: post.time_created,
         reverse=True
     )
 
+    # Renvoyer la page HTML avec les posts en contexte.
     return render(request, 'blog/home.html', context={'posts': posts})
 
 
